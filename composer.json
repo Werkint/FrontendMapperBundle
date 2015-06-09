@@ -32,7 +32,7 @@
     },
     "autoload":    {
         "psr-4": {
-            "Tommy\\Bundle\\JsTemplatingBundle\\":        "src",
+            "Tommy\\Bundle\\JsTemplatingBundle\\":        "src"
         }
     },
     "extra":       {
