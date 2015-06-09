@@ -9,18 +9,8 @@ parameters:
     Tommy\Bundle\JsTemplatingBundle\Twig\Twigjs\JsTemplatingExtension
   tommy_js_templating.jsmodel.class:
     Tommy\Bundle\JsTemplatingBundle\Service\Jsmodel\Jsmodel
-  tommy_js_templating.filter.cssurls.class:
-    Tommy\Bundle\JsTemplatingBundle\Service\Filter\CssurlsFilter
 
 services:
-  tommy_js_templating.filter.cssurls:
-    class: %tommy_js_templating.filter.cssurls.class%
-    scope: request
-    arguments:
-      - @kernel
-      - @templating.helper.assets
-    tags:
-      - { name: assetic.filter, alias: cssurls }
   tommy_js_templating.jsmodel:
     class: %tommy_js_templating.jsmodel.class%
 

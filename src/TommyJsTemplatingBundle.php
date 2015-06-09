@@ -32,7 +32,6 @@ class TommyJsTemplatingBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new AsseticFiltersPass());
         $container->addCompilerPass(new JsmodelProviderPass($this->kernel));
     }
 }
