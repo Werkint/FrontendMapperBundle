@@ -68,10 +68,10 @@ class JsTemplatingExtension extends \Twig_Extension
             }
 
             $contents = $this->templating->getLoader()->getSource($name);
-//            $template = $this->templating->loadTemplate($name);
-//            if ($template instanceof Template) {
-//                $template->processDisplay();
-//            }
+            $template = $this->templating->loadTemplate($name);
+            if ($template instanceof Template) {
+                $template->processDisplay();
+            }
 
             // Инклуды. todo: check import
             preg_match_all('!%\\s*(include|extends|import)\\s*(\'|")?(.+?)(\'|")?\\s+!', $contents, $m);
