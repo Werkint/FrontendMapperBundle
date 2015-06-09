@@ -1,0 +1,45 @@
+{
+    "name":        "werkint/js-templating-bundle",
+    "description": "This bundle provides integration of gulp into Symfony2",
+    "type":        "symfony-bundle",
+    "license":     "proprietary",
+    "authors":     [
+        {
+            "name":  "Kevin Montag",
+            "email": "kmontag@cs.stanford.edu"
+        },
+        {
+            "name":  "Bogdan Yurov",
+            "email": "bogdan@yurov.me"
+        },
+        {
+            "name":  "Grigory Kotov",
+            "email": "tomfun1990@gmail.com"
+        }
+    ],
+    "require":     {
+        "symfony/finder":           ">=2.0",
+        "symfony/yaml":             ">=2.0",
+        "kriswallsmith/assetic":    ">=1.0",
+        "symfony/framework-bundle": ">=2.0.9",
+
+        "php": ">=5.5"
+    },
+    "require-dev": {
+        "twig/extensions":           "v1.0.0",
+        "squizlabs/php_codesniffer": "1.*",
+        "phpunit/phpunit":           "3.7.*"
+    },
+    "autoload":    {
+        "psr-4": {
+            "Tommy\\Bundle\\JsTemplatingBundle\\":        "src",
+        }
+    },
+    "extra":       {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
+    },
+
+    "minimum-stability": "dev"
+}

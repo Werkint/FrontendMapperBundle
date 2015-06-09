@@ -1,0 +1,85 @@
+parameters:
+  tommy_js_templating.namespace_mapping.class:
+    Tommy\Bundle\JsTemplatingBundle\Configuration\NamespaceMapping
+  tommy_js_templating.configuration_builder.class:
+    Tommy\Bundle\JsTemplatingBundle\Configuration\ConfigurationBuilder
+#  tommy_js_templating.optimizer_filter.class:
+#    Tommy\Bundle\JsTemplatingBundle\Assetic\Filter\RJsFilter
+  tommy_js_templating.twig_extension.class:
+    Tommy\Bundle\JsTemplatingBundle\Twig\Twigjs\JsTemplatingExtension
+  tommy_js_templating.jsmodel.class:
+    Tommy\Bundle\JsTemplatingBundle\Service\Jsmodel\Jsmodel
+  tommy_js_templating.filter.cssurls.class:
+    Tommy\Bundle\JsTemplatingBundle\Service\Filter\CssurlsFilter
+
+services:
+  tommy_js_templating.filter.cssurls:
+    class: %tommy_js_templating.filter.cssurls.class%
+    scope: request
+    arguments:
+      - @kernel
+      - @templating.helper.assets
+    tags:
+      - { name: assetic.filter, alias: cssurls }
+  tommy_js_templating.jsmodel:
+    class: %tommy_js_templating.jsmodel.class%
+
+#  tommy_js_templating.module_formula_loader:
+#    class: %tommy_js_templating.module_formula_loader.class%
+#    arguments:
+#      - @assetic.asset_factory
+#      - @tommy_js_templating.namespace_mapping
+#    tags:
+#      - { name: assetic.formula_loader, alias: require_js }
+
+#  tommy_js_templating.filenames_resource:
+#    class: %tommy_js_templating.filenames_resource.class%
+#    abstract: true
+
+  tommy_js_templating.namespace_mapping:
+    class: %tommy_js_templating.namespace_mapping.class%
+    public: false
+
+  tommy_js_templating.configuration_builder:
+    class: %tommy_js_templating.configuration_builder.class%
+    arguments:
+      - @service_container
+      - @tommy_js_templating.namespace_mapping
+      - %tommy_js_templating.base_dir%
+    public: false
+
+#  tommy_js_templating.twig_extension:
+#    class: %tommy_js_templating.twig_extension.class%
+#    arguments:
+#      - @service_container
+#      - @tommy_js_templating.configuration_builder
+#    tags:
+#      - { name: twig.extension }
+
+#  tommy_js_templating.optimizer_filter:
+#    class: %tommy_js_templating.optimizer_filter.class%
+#    arguments:
+#      - %assetic.node.bin%
+#      - %tommy_js_templating.r.path%
+#      - %tommy_js_templating.base_dir%
+#      - %tommy_js_templating.declare_module_name%
+#    calls:
+#      - [ addNodePath, [%assetic.node.bin%] ]
+#    tags:
+#      - { name: assetic.filter, alias: requirejs }
+  tommy_js_templating.dump_processor:
+    class: Tommy\Bundle\JsTemplatingBundle\Service\DumpProcessor
+    arguments:
+      - @tommy_js_templating.namespace_mapping
+      - %kernel.root_dir%
+      - %tommy_js_templating.use_symlinks%
+      - %tommy_js_templating.base_dir%
+      - %tommy_js_templating.json_file%
+
+  tommy_js_templating.dumper_warmer:
+    class: Tommy\Bundle\JsTemplatingBundle\Service\Dumper
+    arguments:
+      - %tommy_js_templating.auto_dump%
+      - @tommy_js_templating.dump_processor
+    tags:
+        - { name: kernel.cache_warmer, priority: -999 }
