@@ -1,5 +1,6 @@
 gulp task example:
 
+```
 var gulp       = require('gulp'),
     _          = require('underscore'),
     execSync   = require('exec-sync'),
@@ -51,3 +52,5 @@ gulp.task('dump-bundles', function () {
             .pipe(gulp.dest(exportPath + '/js' + dest));
     });
 });
+
+```
