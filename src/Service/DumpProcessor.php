@@ -1,9 +1,9 @@
 <?php
 namespace Tommy\Bundle\JsTemplatingBundle\Service;
 
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo as File;
 use Tommy\Bundle\JsTemplatingBundle\Configuration\NamespaceMapping;
-use Symfony\Component\Finder\Finder;
 use Tommy\Bundle\JsTemplatingBundle\Exception\InvalidPathException;
 
 /**
@@ -47,7 +47,6 @@ class DumpProcessor
             $files = $this->collectFiles($type, $items);
             $this->processDump($this->basePaths[$type], $files);
         }
-        //json_encode($data);
     }
 
     /**
@@ -55,9 +54,9 @@ class DumpProcessor
      * @param null $type   not implemented
      * @throws \Exception
      */
-    public function exportJsonFile($bundle = null, $type = null)
+    public function exportJsonFile($bundle = null, $type = null, $files = false)
     {
-        $json = $this->buildJson($bundle, $type);
+        $json = $this->buildJson($bundle, $type, $files);
         $info = new \SplFileInfo($this->kernelRoot . '/../' . trim($this->exportJsonFile, '\/'));
         $path = $info->getPath();
         if (!is_dir($path)) {
@@ -72,15 +71,15 @@ class DumpProcessor
 
     /**
      * @param null $bundle not implemented
-     * @param null $type not implemented
+     * @param null $type   not implemented
      * @return string
      */
-    public function buildJson($bundle = null, $type = null)
+    public function buildJson($bundle = null, $type = null, $files = true)
     {
         $data = $this->mapper->getRegisteredPaths();
         $groups = [];
         foreach ($data as $type => $items) {
-            $groups[$type] = $this->collectFiles($type, $items);
+            $groups[$type] = $this->collectFiles($type, $items, $files);
         }
         return json_encode($this->processJson($groups));
     }
@@ -90,7 +89,7 @@ class DumpProcessor
      * @param array  $items
      * @return array
      */
-    public function collectFiles($type, $items)
+    public function collectFiles($type, $items, $files = true)
     {
         $res = [];
         foreach ($items as $item) {
@@ -99,9 +98,19 @@ class DumpProcessor
         foreach ($items as $item) {
             $path = $item['path'];
             $exportName = $item['exportName'];
+            if (!$files) {
+                $res[$exportName][] = [
+                    'prefix'           => $path,
+                    'realPath'         => $path . '/**/*.' . $type,
+                    'relativePathName' => '',
+                    'relativePath'     => '',
+                    'baseName'         => basename($path),
+                ];
+                continue;
+            }
             if (is_file($path)) {
                 if ((($temp = strlen($path) - strlen($type)) >= 0 && strpos($path, $type, $temp) !== false)) {
-                    $res[$exportName][] = $path;
+                    // TODO: NOT WORKING
                 }
             } else {
                 $finder = new Finder();
@@ -109,11 +118,14 @@ class DumpProcessor
                 foreach ($finder as $file) {
                     /** @var File $file */
                     $res[$exportName][] = [
+                        'prefix'           => $path,
                         'realPath'         => $file->getRealPath(),
                         'relativePathName' => $file->getRelativePathname(),
                         'relativePath'     => $file->getRelativePath(),
                         'baseName'         => $file->getBasename(),
                     ];
+                    var_dump($res[$exportName]);
+                    die();
                 }
             }
         }
@@ -181,7 +193,10 @@ class DumpProcessor
                         $subDestination .= '/' . $file['relativePath'];
                     }
                     $subDestination .= '/' . $file['baseName'];
-                    $res[$type][$subDestination] = $file['realPath'];
+                    $res[$type][$subDestination] = [
+                        'path'   => $file['realPath'],
+                        'prefix' => $file['prefix'],
+                    ];
                 }
             }
         }

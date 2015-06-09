@@ -17,31 +17,31 @@ class DumpCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('tommy:js:dump')
+            ->setName('werkint:js-templating:dump')
             ->setDescription('Dump bundles\' metadata')
             ->addArgument(
                 'bundle-name',
-                InputArgument::OPTIONAL,
-                'Who do you want to greet?'
+                InputArgument::OPTIONAL
             )
             ->addArgument(
                 'type',
-                InputArgument::OPTIONAL,
-                'Who do you want to greet?'
+                InputArgument::OPTIONAL
             )
             ->addOption(
                 'screen',
                 null,
-                InputOption::VALUE_NONE,
-                'If set, the task will yell in uppercase letters'
+                InputOption::VALUE_NONE
+            )
+            ->addOption(
+                'files',
+                null,
+                InputOption::VALUE_NONE
             )
             ->addOption(
                 'dump',
                 null,
-                InputOption::VALUE_NONE,
-                'If set, the task will yell in uppercase letters'
-            )
-        ;
+                InputOption::VALUE_NONE
+            );
     }
 
     /**
@@ -57,12 +57,8 @@ class DumpCommand extends ContainerAwareCommand
         }
         /** @var DumpProcessor $processor */
         $processor = $this->getContainer()->get('tommy_js_templating.dump_processor');
-//        $name = $input->getArgument('bundle-name');
-//        if ($name) {
-//            $text = 'Hello '.$name;
-//        } else {
-//            $text = 'Hello';
-//        }
+
+        $files = (bool)$input->getOption('files');
 
         if ($input->getOption('dump')) {
             if ($processor->isUseSymLinks()) {
@@ -74,7 +70,7 @@ class DumpCommand extends ContainerAwareCommand
             }
             $processor->dump();
         } elseif ($input->getOption('screen')) {
-            $output->write($processor->buildJson($input->getArgument('bundle-name')));
+            $output->write($processor->buildJson($input->getArgument('bundle-name'), null, $files));
         } else {
             $processor->exportJsonFile($input->getArgument('bundle-name'));
             $output->writeln('file placed: <comment>' . $processor->getExportJsonFile() . '</comment>');
