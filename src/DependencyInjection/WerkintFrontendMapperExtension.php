@@ -28,7 +28,6 @@ class WerkintFrontendMapperExtension extends Extension
             new FileLocator(__DIR__ . '/../Resources/config')
         );
         $loader->load('services.yml');
-        $loader->load('twigjs.yml');
 
         $container->setParameter($this->getAlias() . '.' . 'auto_dump', $config['auto_dump']);
         $container->setParameter($this->getAlias() . '.' . 'use_symlinks', $config['use_symlinks']);

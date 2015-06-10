@@ -14,9 +14,7 @@ use Werkint\Bundle\FrontendMapperBundle\Service\Util;
 class JsmodelProviderPass implements
     CompilerPassInterface
 {
-    const CLASS_SRV = 'werkint_frontend_mapper.jsmodel';
-    const CLASS_TAG = 'werkint.requirejs.jsmodelprovider';
-    const FRONTEND_PATH = 'Resources/fronted';
+    const FRONTEND_PATH = 'Resources/frontend';
     const EXT_NAME = 'werkint_frontend_mapper';
     const JS_MODEL_POSTFIX = 'jsmodeldir';
     const JS_EXPORT_NAME_POSTFIX = 'jsmodel.name';

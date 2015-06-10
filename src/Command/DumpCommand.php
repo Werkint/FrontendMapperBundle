@@ -55,7 +55,7 @@ class DumpCommand extends ContainerAwareCommand
 
             $output->writeln('<info>begin dumping</info>');
         }
-        $processor = $this->getDescription();
+        $processor = $this->getDumpProcessor();
 
         $files = (bool)$input->getOption('files');
 
