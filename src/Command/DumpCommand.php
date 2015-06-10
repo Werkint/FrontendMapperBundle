@@ -1,5 +1,5 @@
 <?php
-namespace Tommy\Bundle\JsTemplatingBundle\Command;
+namespace Werkint\Bundle\FrontendMapperBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Tommy\Bundle\JsTemplatingBundle\Service\DumpProcessor;
+use Werkint\Bundle\FrontendMapperBundle\Service\DumpProcessor;
 
 /**
  * @author Tomfun <tomfun1990@gmail.com>
@@ -17,7 +17,7 @@ class DumpCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('werkint:js-templating:dump')
+            ->setName('werkint:frontendmapper:dump')
             ->setDescription('Dump bundles\' metadata')
             ->addArgument(
                 'bundle-name',
@@ -55,8 +55,7 @@ class DumpCommand extends ContainerAwareCommand
 
             $output->writeln('<info>begin dumping</info>');
         }
-        /** @var DumpProcessor $processor */
-        $processor = $this->getContainer()->get('tommy_js_templating.dump_processor');
+        $processor = $this->getDescription();
 
         $files = (bool)$input->getOption('files');
 
@@ -78,5 +77,13 @@ class DumpCommand extends ContainerAwareCommand
         if (!$input->getOption('screen')) {
             $output->writeln('<fire>OK</fire>');
         }
+    }
+
+    /**
+     * @return DumpProcessor
+     */
+    protected function getDumpProcessor()
+    {
+        return $this->getContainer()->get('werkint_frontend_mapper.dump_processor');
     }
 }

@@ -1,5 +1,5 @@
 <?php
-namespace Tommy\Bundle\JsTemplatingBundle\Exception;
+namespace Werkint\Bundle\FrontendMapperBundle\Exception;
 
 /**
  * This class represents the exception that is thrown if an argument does not

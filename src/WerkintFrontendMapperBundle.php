@@ -1,11 +1,10 @@
 <?php
-namespace Tommy\Bundle\JsTemplatingBundle;
+namespace Werkint\Bundle\FrontendMapperBundle;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Tommy\Bundle\JsTemplatingBundle\DependencyInjection\Compiler\AsseticFiltersPass;
-use Tommy\Bundle\JsTemplatingBundle\DependencyInjection\Compiler\JsmodelProviderPass;
+use Werkint\Bundle\FrontendMapperBundle\DependencyInjection\Compiler\JsmodelProviderPass;
 
 /**
  * Bundle providing RequireJS integration.
@@ -13,7 +12,7 @@ use Tommy\Bundle\JsTemplatingBundle\DependencyInjection\Compiler\JsmodelProvider
  * @author Kevin Montag <kevin@hearsay.it>
  * @codeCoverageIgnore
  */
-class TommyJsTemplatingBundle extends Bundle
+class WerkintFrontendMapperBundle extends Bundle
 {
     private $kernel;
 

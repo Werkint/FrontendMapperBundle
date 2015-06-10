@@ -1,10 +1,10 @@
 <?php
-namespace Tommy\Bundle\JsTemplatingBundle\DependencyInjection\Compiler;
+namespace Werkint\Bundle\FrontendMapperBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Tommy\Bundle\JsTemplatingBundle\Service\Util;
+use Werkint\Bundle\FrontendMapperBundle\Service\Util;
 
 /**
  * JsmodelProviderPass.
@@ -14,9 +14,10 @@ use Tommy\Bundle\JsTemplatingBundle\Service\Util;
 class JsmodelProviderPass implements
     CompilerPassInterface
 {
-    const CLASS_SRV = 'tommy_js_templating.jsmodel';
+    const CLASS_SRV = 'werkint_frontend_mapper.jsmodel';
     const CLASS_TAG = 'werkint.requirejs.jsmodelprovider';
-    const EXT_NAME = 'tommy_js_templating';
+    const FRONTEND_PATH = 'Resources/fronted';
+    const EXT_NAME = 'werkint_frontend_mapper';
     const JS_MODEL_POSTFIX = 'jsmodeldir';
     const JS_EXPORT_NAME_POSTFIX = 'jsmodel.name';
     const JS_CONFIG_POSTFIX = 'gulpconfig';
@@ -59,7 +60,7 @@ class JsmodelProviderPass implements
             //legacy, simple configuration for bundle
             $configPath = $alias . '.' . static::JS_MODEL_POSTFIX;
             if (!$container->hasParameter($configPath) || !($dir = $container->getParameter($configPath))) {
-                $dir = $bundle->getPath() . '/Resources/scripts/jsmodel';
+                $dir = $bundle->getPath() . '/' . static::FRONTEND_PATH;
             }
             if ($dir = realpath($dir)) {
                 $configPath = $alias . '.' . static::JS_EXPORT_NAME_POSTFIX;
@@ -108,19 +109,5 @@ class JsmodelProviderPass implements
 
         $config = $container->getDefinition(static::EXT_NAME . '.configuration_builder');
         $config->addMethodCall('setPath', [$path, $location, $type]);
-
-//        if ($path && $container->hasDefinition(static::EXT_NAME . '.optimizer_filter')) {
-//            $filter = $container->getDefinition(static::EXT_NAME . '.optimizer_filter');
-//            $filter->addMethodCall('addPath', [$path, preg_replace('~\.js$~', '', $location)]);
-//        }
-
-//        if ($generateAssets) {
-//            $resource = new DefinitionDecorator(static::EXT_NAME . '.filenames_resource');
-//            $resource->setArguments([$location]);
-//            $resource->addTag('assetic.formula_resource', ['loader' => 'require_js']);
-//            $container->addDefinitions([
-//                static::EXT_NAME . '.filenames_resource.' . md5($location) => $resource,
-//            ]);
-//        }
     }
 }

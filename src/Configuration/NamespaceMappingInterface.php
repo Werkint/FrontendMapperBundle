@@ -1,7 +1,7 @@
 <?php
-namespace Tommy\Bundle\JsTemplatingBundle\Configuration;
+namespace Werkint\Bundle\FrontendMapperBundle\Configuration;
 
-use Tommy\Bundle\JsTemplatingBundle\Exception\PathNotFoundException;
+use Werkint\Bundle\FrontendMapperBundle\Exception\PathNotFoundException;
 
 /**
  * Mapping of base file paths to Javascript module namespaces.

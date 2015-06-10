@@ -1,8 +1,8 @@
 <?php
 
-namespace Tommy\Bundle\JsTemplatingBundle\Configuration;
+namespace Werkint\Bundle\FrontendMapperBundle\Configuration;
 
-use Tommy\Bundle\JsTemplatingBundle\Exception\PathNotFoundException;
+use Werkint\Bundle\FrontendMapperBundle\Exception\PathNotFoundException;
 
 /**
  * Concrete module namespace map.

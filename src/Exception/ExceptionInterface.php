@@ -1,5 +1,5 @@
 <?php
-namespace Tommy\Bundle\JsTemplatingBundle\Exception;
+namespace Werkint\Bundle\FrontendMapperBundle\Exception;
 
 /**
  * The interface for the exception

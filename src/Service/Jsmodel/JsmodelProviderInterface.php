@@ -1,5 +1,5 @@
 <?php
-namespace Tommy\Bundle\JsTemplatingBundle\Service\Jsmodel;
+namespace Werkint\Bundle\FrontendMapperBundle\Service\Jsmodel;
 
 /**
  * Интерфейс класса для предоставления папок

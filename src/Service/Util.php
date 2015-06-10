@@ -1,8 +1,8 @@
 <?php
-namespace Tommy\Bundle\JsTemplatingBundle\Service;
+namespace Werkint\Bundle\FrontendMapperBundle\Service;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Tommy\Bundle\JsTemplatingBundle\Exception\InvalidArgumentException;
+use Werkint\Bundle\FrontendMapperBundle\Exception\InvalidArgumentException;
 
 /**
  * @author Bogdan Yurov <bogdan@yurov.me>

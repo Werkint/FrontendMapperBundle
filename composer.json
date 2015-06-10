@@ -1,13 +1,9 @@
 {
-    "name":        "werkint/js-templating-bundle",
+    "name":        "werkint/frontend-mapper-bundle",
     "description": "This bundle provides integration of gulp into Symfony2",
     "type":        "symfony-bundle",
     "license":     "proprietary",
     "authors":     [
-        {
-            "name":  "Kevin Montag",
-            "email": "kmontag@cs.stanford.edu"
-        },
         {
             "name":  "Bogdan Yurov",
             "email": "bogdan@yurov.me"
@@ -32,7 +28,7 @@
     },
     "autoload":    {
         "psr-4": {
-            "Tommy\\Bundle\\JsTemplatingBundle\\":        "src"
+            "Werkint\\Bundle\\FrontendMapperBundle\\":        "src"
         }
     },
     "minimum-stability": "dev"

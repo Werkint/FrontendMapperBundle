@@ -1,5 +1,5 @@
 <?php
-namespace Tommy\Bundle\JsTemplatingBundle\Service;
+namespace Werkint\Bundle\FrontendMapperBundle\Service;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;

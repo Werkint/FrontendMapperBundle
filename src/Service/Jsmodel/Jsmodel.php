@@ -1,5 +1,5 @@
 <?php
-namespace Tommy\Bundle\JsTemplatingBundle\Service\Jsmodel;
+namespace Werkint\Bundle\FrontendMapperBundle\Service\Jsmodel;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

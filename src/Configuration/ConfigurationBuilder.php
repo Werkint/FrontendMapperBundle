@@ -1,5 +1,5 @@
 <?php
-namespace Tommy\Bundle\JsTemplatingBundle\Configuration;
+namespace Werkint\Bundle\FrontendMapperBundle\Configuration;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

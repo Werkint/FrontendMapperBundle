@@ -1,10 +1,10 @@
 <?php
-namespace Tommy\Bundle\JsTemplatingBundle\Service;
+namespace Werkint\Bundle\FrontendMapperBundle\Service;
 
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo as File;
-use Tommy\Bundle\JsTemplatingBundle\Configuration\NamespaceMapping;
-use Tommy\Bundle\JsTemplatingBundle\Exception\InvalidPathException;
+use Werkint\Bundle\FrontendMapperBundle\Configuration\NamespaceMapping;
+use Werkint\Bundle\FrontendMapperBundle\Exception\InvalidPathException;
 
 /**
  * @class  DumpProcessor

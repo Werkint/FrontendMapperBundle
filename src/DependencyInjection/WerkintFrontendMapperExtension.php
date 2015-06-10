@@ -1,21 +1,20 @@
 <?php
-namespace Tommy\Bundle\JsTemplatingBundle\DependencyInjection;
+namespace Werkint\Bundle\FrontendMapperBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Tommy\Bundle\JsTemplatingBundle\DependencyInjection\Compiler\JsmodelProviderPass;
-use Tommy\Bundle\JsTemplatingBundle\Service\Util;
+use Werkint\Bundle\FrontendMapperBundle\DependencyInjection\Compiler\JsmodelProviderPass;
+use Werkint\Bundle\FrontendMapperBundle\Service\Util;
 
 /**
  * Bundle setup.
  *
  * @author Kevin Montag <kevin@hearsay.it>
  */
-class TommyJsTemplatingExtension extends Extension
+class WerkintFrontendMapperExtension extends Extension
 {
-
     /**
      * {@inheritDoc}
      */
@@ -65,14 +64,5 @@ class TommyJsTemplatingExtension extends Extension
         foreach ($config['options'] as $option => $settings) {
             $configurationBuilder->addMethodCall('addOption', [$option, $settings['value']]);
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAlias()
-    {
-        // Speedup
-        return 'tommy_js_templating';
     }
 }
