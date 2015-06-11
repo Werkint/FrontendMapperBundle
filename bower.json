@@ -1,0 +1,10 @@
+{
+    "name": "werkint-frontend-mapper",
+    "main": "bower.json",
+    "dependencies": {
+        "requirejs-plugins": "*"
+    },
+    "ignore": [
+        "**/*"
+    ]
+}

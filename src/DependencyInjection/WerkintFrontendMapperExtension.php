@@ -29,6 +29,16 @@ class WerkintFrontendMapperExtension extends Extension
         );
         $loader->load('services.yml');
 
+        // У нас есть корневые скрипты
+        $container->setParameter(
+            $this->getAlias() . '.frontend_config', [
+                [
+                    'path' => realpath(__DIR__ . '/../Resources/frontend'),
+                    'name' => '',
+                ],
+            ]
+        );
+
         $container->setParameter($this->getAlias() . '.' . 'auto_dump', $config['auto_dump']);
         $container->setParameter($this->getAlias() . '.' . 'use_symlinks', $config['use_symlinks']);
         $container->setParameter($this->getAlias() . '.' . 'json_file', $config['json_file']);
