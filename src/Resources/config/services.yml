@@ -1,40 +1,7 @@
 parameters:
   werkint_frontend_mapper.namespace_mapping.class:
     Werkint\Bundle\FrontendMapperBundle\Configuration\NamespaceMapping
-  werkint_frontend_mapper.configuration_builder.class:
-    Werkint\Bundle\FrontendMapperBundle\Configuration\ConfigurationBuilder
-  werkint_frontend_mapper.jsmodel.class:
-    Werkint\Bundle\FrontendMapperBundle\Service\Jsmodel\Jsmodel
 
 services:
-  werkint_frontend_mapper.jsmodel:
-    class: %werkint_frontend_mapper.jsmodel.class%
-
   werkint_frontend_mapper.namespace_mapping:
     class: %werkint_frontend_mapper.namespace_mapping.class%
-    public: false
-
-  werkint_frontend_mapper.configuration_builder:
-    class: %werkint_frontend_mapper.configuration_builder.class%
-    arguments:
-      - @service_container
-      - @werkint_frontend_mapper.namespace_mapping
-      - %werkint_frontend_mapper.base_dir%
-    public: false
-
-  werkint_frontend_mapper.dump_processor:
-    class: Werkint\Bundle\FrontendMapperBundle\Service\DumpProcessor
-    arguments:
-      - @werkint_frontend_mapper.namespace_mapping
-      - %kernel.root_dir%
-      - %werkint_frontend_mapper.use_symlinks%
-      - %werkint_frontend_mapper.base_dir%
-      - %werkint_frontend_mapper.json_file%
-
-  werkint_frontend_mapper.dumper_warmer:
-    class: Werkint\Bundle\FrontendMapperBundle\Service\Dumper
-    arguments:
-      - %werkint_frontend_mapper.auto_dump%
-      - @werkint_frontend_mapper.dump_processor
-    tags:
-        - { name: kernel.cache_warmer, priority: -999 }

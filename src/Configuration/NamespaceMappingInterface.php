@@ -15,16 +15,15 @@ interface NamespaceMappingInterface
      *
      * @param  string $namespace The namespace
      * @param  string $path      The path
-     * @param  string $type
      * @throws PathNotFoundException            If the path was not found
      */
-    public function registerNamespace($namespace, $path, $type);
+    public function registerNamespace($namespace, $path);
 
     /**
      * Gets the module path, e.g. `namespace/modules.js` corresponding to a
      * filesystem path
      *
-     * @param  string $filename The filename
+     * @param  string $filename         The filename
      * @return boolean|string           Returns false on failure, e.g. if the
      *                                  file does not exist or a string that
      *                                  represents the module path

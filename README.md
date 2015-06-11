@@ -18,7 +18,7 @@ gulp.task('default', ['dump-bundles'], function () {
 });
 
 gulp.task('dump-bundles', function () {
-    var myData = execSync('app/console werkint:frontendmapper:dump --screen');
+    var myData = execSync('app/console werkint:frontendmapper:dump');
     var colors = require('colors/safe');
     myData = JSON.parse(myData);
     _.each(myData, function (data, type) {

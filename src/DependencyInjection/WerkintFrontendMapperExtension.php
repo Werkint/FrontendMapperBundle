@@ -55,13 +55,5 @@ class WerkintFrontendMapperExtension extends Extension
             $this->getAlias() . '.base_dir',
             $config['base_dir']
         );
-
-        $configurationBuilder = $container->getDefinition(
-            $this->getAlias() . '.configuration_builder'
-        );
-
-        foreach ($config['options'] as $option => $settings) {
-            $configurationBuilder->addMethodCall('addOption', [$option, $settings['value']]);
-        }
     }
 }

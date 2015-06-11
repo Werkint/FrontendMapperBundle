@@ -21,7 +21,7 @@ class NamespaceMapping implements NamespaceMappingInterface
     /**
      * {@inheritDoc}
      */
-    public function registerNamespace($namespace, $path, $type)
+    public function registerNamespace($namespace, $path)
     {
         if (!$realPath = $this->getRealPath($path)) {
             throw new PathNotFoundException(
@@ -29,7 +29,7 @@ class NamespaceMapping implements NamespaceMappingInterface
             );
         }
 
-        $this->namespaces[] = [$namespace, $realPath, $type];
+        $this->namespaces[] = [$namespace, $realPath];
     }
 
     /**
@@ -42,7 +42,6 @@ class NamespaceMapping implements NamespaceMappingInterface
         foreach ($this->namespaces as $realPath) {
             $namespace = $realPath[0];
             $realPath = $realPath[1];
-            $type = $realPath[2];
             if (strpos($filePath, $realPath) === 0) {
                 $modulePath = $this->basePath . '/' . $namespace;
 
@@ -58,23 +57,13 @@ class NamespaceMapping implements NamespaceMappingInterface
     }
 
     /**
-     * @return array type => [ ['path' => ..., 'exportName' => ...] ]
+     * @return array
      */
     public function getRegisteredPaths()
     {
-        $types = [];
-        foreach ($this->namespaces as $item) {
-            $types[] = $item[2];
-        }
-        $types = array_unique($types);
         $res = [];
-        foreach ($types as $type) {
-            $res[$type] = [];
-            foreach ($this->namespaces as $item) {
-                if ($item[2] === $type) {
-                    $res[$type][] = ['path' => $item[1], 'exportName' => $item[0]];
-                }
-            }
+        foreach ($this->namespaces as $item) {
+            $res[] = ['path' => $item[1], 'name' => $item[0]];
         }
         return $res;
     }
@@ -101,17 +90,13 @@ class NamespaceMapping implements NamespaceMappingInterface
     /**
      * Gets the real path of the given path
      *
-     * @param  string $path The path
+     * @param  string $path         The path
      * @return boolean|string       Returns false on failure, e.g. if the file
      *                              does not exist, or a string that represents
      *                              the real path of the given path
      */
     protected function getRealPath($path)
     {
-        if (is_file($path . '.js')) {
-            $path .= '.js';
-        }
-
         if (!$realPath = realpath($path)) {
             return false;
         }
