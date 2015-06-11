@@ -9,16 +9,16 @@ use Werkint\Bundle\FrontendMapperBundle\Service\PathsStorage;
 use Werkint\Bundle\FrontendMapperBundle\Service\Util;
 
 /**
- * Проходится по бандлам и генерирует провайдеры для фронтенда
+ * Проходится по бандлам и добавляет bower.json в конфиг
  *
  * @author Bogdan Yurov <bogdan@yurov.me>
  */
-class JsmodelProviderPass implements
+class BowerProviderPass implements
     CompilerPassInterface
 {
-    const FRONTEND_PATH = 'Resources/frontend';
+    const DEFAULT_PATH = 'bower.json';
     const EXT_NAME = 'werkint_frontend_mapper';
-    const PARAMETER_POSTFIX = 'frontend_config';
+    const PARAMETER_POSTFIX = 'bower_config';
 
     protected $kernel;
 
@@ -40,16 +40,13 @@ class JsmodelProviderPass implements
         foreach ($this->kernel->getBundles() as $bundle) {
             $config = $this->getBundleConfig($bundle, $container);
 
-            if (is_string($config)) {
-                $config = [[
-                    'path' => $config,
-                    'name' => $this->getBundleAlias($bundle),
-                ]];
+            if (!$config) {
+                continue;
             }
 
-            foreach ($config as $row) {
-                $this->addMapping($row['path'], $row['name'], $container);
-            }
+            $name = json_decode(file_get_contents($config), true)['name'];
+
+            $this->addMapping($config, $name, $container);
         }
     }
 
@@ -85,15 +82,15 @@ class JsmodelProviderPass implements
 
         $parameter = $alias . '.' . static::PARAMETER_POSTFIX;
         if (!$container->hasParameter($parameter)) {
-            $path = $bundle->getPath() . '/' . static::FRONTEND_PATH;
+            $path = $bundle->getPath() . '/' . static::DEFAULT_PATH;
             if (!file_exists($path)) {
-                return [];
+                return null;
             }
             $container->setParameter($parameter, $path);
         }
 
         $data = $container->getParameter($parameter);
-        if (!in_array(gettype($data), ['array', 'string'])) {
+        if (!in_array(gettype($data), ['string'])) {
             throw new \Exception('Wrong config parameter');
         }
 
@@ -115,7 +112,7 @@ class JsmodelProviderPass implements
         // Register the namespace with the configuration
         $mapping = $container->getDefinition(static::EXT_NAME . '.pathsstorage');
         $mapping->addMethodCall('registerPath', [
-            PathsStorage::NS_FRONTEND,
+            PathsStorage::NS_BOWER,
             $location,
             ['name' => $name],
         ]);

@@ -4,6 +4,7 @@ namespace Werkint\Bundle\FrontendMapperBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Werkint\Bundle\FrontendMapperBundle\DependencyInjection\Compiler\BowerProviderPass;
 use Werkint\Bundle\FrontendMapperBundle\DependencyInjection\Compiler\JsmodelProviderPass;
 
 /**
@@ -32,5 +33,6 @@ class WerkintFrontendMapperBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new JsmodelProviderPass($this->kernel));
+        $container->addCompilerPass(new BowerProviderPass($this->kernel));
     }
 }

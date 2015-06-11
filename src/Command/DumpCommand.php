@@ -4,7 +4,7 @@ namespace Werkint\Bundle\FrontendMapperBundle\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Werkint\Bundle\FrontendMapperBundle\Configuration\NamespaceMapping;
+use Werkint\Bundle\FrontendMapperBundle\Service\PathsStorage;
 
 /**
  * Дампит данные бандлов
@@ -24,16 +24,23 @@ class DumpCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->write(json_encode(
-            $this->getNamespaceMapping()->getRegisteredPaths()
-        ));
+        $data = $this->getPathsStorage()->getRegisteredPaths(PathsStorage::NS_FRONTEND);
+
+        $data = array_map(function (array $data) {
+            return [
+                'path' => $data['path'],
+                'name' => $data['metadata']['name'],
+            ];
+        }, $data);
+
+        $output->write(json_encode($data, JSON_PRETTY_PRINT));
     }
 
     /**
-     * @return NamespaceMapping
+     * @return PathsStorage
      */
-    protected function getNamespaceMapping()
+    protected function getPathsStorage()
     {
-        return $this->getContainer()->get('werkint_frontend_mapper.namespace_mapping');
+        return $this->getContainer()->get('werkint_frontend_mapper.pathsstorage');
     }
 }

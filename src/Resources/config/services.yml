@@ -1,7 +1,7 @@
 parameters:
-  werkint_frontend_mapper.namespace_mapping.class:
-    Werkint\Bundle\FrontendMapperBundle\Configuration\NamespaceMapping
+  werkint_frontend_mapper.pathsstorage.class:
+    Werkint\Bundle\FrontendMapperBundle\Service\PathsStorage
 
 services:
-  werkint_frontend_mapper.namespace_mapping:
-    class: %werkint_frontend_mapper.namespace_mapping.class%
+  werkint_frontend_mapper.pathsstorage:
+    class: %werkint_frontend_mapper.pathsstorage.class%

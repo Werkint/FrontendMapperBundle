@@ -27,8 +27,7 @@ var streams = {
         return gulp
             .src(bower(), {
                 base: config.bower.target,
-            })
-            .pipe(mark.set('bower'));
+            });
     },
     bundles: function () {
         var files = symfonyMapper();
