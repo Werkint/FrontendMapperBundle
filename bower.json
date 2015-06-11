@@ -2,7 +2,11 @@
     "name": "werkint-frontend-mapper",
     "main": "bower.json",
     "dependencies": {
-        "requirejs-plugins": "*"
+        "requirejs-plugins": "*",
+        "lodash": "*",
+        "backbone": "*",
+        "backbone.relational": "*",
+        "backbone.modelbinder": "*"
     },
     "ignore": [
         "**/*"

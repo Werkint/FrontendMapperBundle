@@ -76,7 +76,7 @@ module.exports = function () {
             .pipe(clean());
     });
 
-    gulp.task('default', ['clean'], /* ['bower'], */function () {
+    gulp.task('default', ['clean', 'bower'], function () {
         return getPipe()
             .pipe(minify())
             .pipe(gulp.dest(config.root));
