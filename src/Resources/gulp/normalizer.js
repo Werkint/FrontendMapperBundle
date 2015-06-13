@@ -3,19 +3,18 @@
 var gutil = require('gulp-util'),
     merge = require('multipipe'),
     normalizer = require('gulp-bower-normalize'),
-    rename = require("gulp-rename");
+    rename = require('gulp-rename');
 
 module.exports = function (config) {
     return function () {
+        // TODO: Мерджить конфиг
         var normalizerOptions = {
-            "bowerJson": './bower.json',
-            "flatten":   true
+            "bowerJson": './' + config.bower.mainFile,
+            "flatten":   true,
         };
 
-        var bowerJson = require(process.cwd() + '/' + normalizerOptions.bowerJson);
-
-        var renames = bowerJson.overrides && bowerJson.overrides.renames ?
-            bowerJson.overrides.renames : {};
+        // TODO: проверка на существование
+        var renames = config.bower.data.overrides.renames || {};
 
         return merge(
             normalizer(normalizerOptions),

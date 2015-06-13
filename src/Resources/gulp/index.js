@@ -4,7 +4,7 @@
 require('events').EventEmitter.prototype._maxListeners = 200;
 
 var gulp = require('gulp'),
-    _ = require('underscore'),
+    _ = require('lodash'),
     merge = require('merge-stream'),
     multipipe = require('multipipe'),
     mark = require('gulp-mark'),
@@ -13,6 +13,9 @@ var gulp = require('gulp'),
     watch = require('gulp-watch'),
     globule = require('globule'),
     clean = require('gulp-clean'),
+    notify = require("gulp-notify"),
+    gulpIgnore = require('gulp-ignore'),
+    plumber = require('gulp-plumber'),
     config = require('./symfony-task')('werkint:frontendmapper:config');
 
 // Task-helpers
@@ -24,10 +27,13 @@ var symfonyMapper = require('./symfony-mapper')(config.bower.target),
 // Список источников
 var streams = {
     bower:   function () {
-        return gulp
-            .src(bower(), {
-                base: config.bower.target,
-            });
+        var src = gulp.src(bower(), {
+            base: config.bower.target,
+        });
+
+        return src
+            .pipe(gulpIgnore.exclude('**/' + config.bower.renamesConfig))
+            .pipe(gulpIgnore.exclude('**/bower.json'));
     },
     bundles: function () {
         var files = symfonyMapper();
@@ -98,11 +104,11 @@ module.exports = function () {
             dest = config.root + '/' + config.path + dest.dest + prefix;
             dest = dest.replace(/\/\//, '/');
 
+            // TODO: log
             gulp.src(path)
                 .pipe(minify())
+                .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
                 .pipe(gulp.dest(dest));
-
-            console.log('File %s => %s', path, dest);
         });
     });
 };
