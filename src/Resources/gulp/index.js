@@ -51,6 +51,7 @@ var streams = {
 
 // Меняет dest в зависимости от бандла
 var bundleRename = function (path, file) {
+    // TODO: Path.join
     path.dirname = config.path + '/' + file.resource.dest + '/' + path.dirname;
 };
 

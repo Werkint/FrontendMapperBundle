@@ -16,48 +16,35 @@ define([
         "relatedModel": null,
         "relatedKey":   'list',
 
-        "initialize": function () {
+        "initialize": function (options) {
             if (!this.relatedModel && this.model) {
                 this.relatedModel = this.model.model;
             }
 
-            this.ensureModel();
-            this.ensureTemplate();
-        },
+            var Model = BaseModel.extend({
+                "relations": [{
+                    "type":         Backbone.HasMany,
+                    "key":          this.relatedKey,
+                    "relatedModel": this.relatedModel
+                }],
 
-        "ensureModel": function () {
-            if (!(this.model && this.model.collectionPatched)) {
-                var Model = BaseModel.extend({
-                    "initialize": function () {
-                        this.collectionPatched = true;
-                    },
+                "fetch": function () {
+                    this.get('list').fetch.apply(this.get('list'), arguments);
+                },
 
-                    "relations": [{
-                        "type":         Backbone.HasMany,
-                        "key":          this.relatedKey,
-                        "relatedModel": this.relatedModel
-                    }],
+                "save": function () {
+                    var list = this.get('list');
+                    list.save(list);
+                }
+            });
 
-                    "fetch": function () {
-                        this.get('list').fetch.apply(this.get('list'), arguments);
-                    },
 
-                    "save": function () {
-                        var list = this.get('list');
-                        list.save(list);
-                    }
-                });
-
+            if (!(this.model instanceof Model)) {
                 var model = this.model;
                 this.model = new Model();
                 this.model.set(this.relatedKey, model);
             }
-        },
 
-        "ensureTemplate": function () {
-            if (this.template.collectionPatched) {
-                return;
-            }
             this.template = _.bind(function (supr) {
                 return _.bind(function (obj, extra) {
                     return supr(_.merge(_.object([[
@@ -66,7 +53,7 @@ define([
                     ]]), extra || {}));
                 }, this);
             }, this)(this.template);
-            this.template.collectionPatched = true;
+
         },
 
         "addItemEmpty": function () {
@@ -81,11 +68,6 @@ define([
                 this.sync("update", this, option);
             };
             list.save();
-        },
-
-        "setModel": function (model) {
-            this.model = model;
-            this.ensureModel();
         },
     });
 
