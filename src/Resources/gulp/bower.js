@@ -13,7 +13,7 @@ var getOverrides = function (bowerTarget, renamesConfig) {
     var files = glob.sync(bowerTarget + '/*/' + renamesConfig);
 
     _.each(files, function (file) {
-        _.merge(data, require(file) || data);
+        _.merge(data, require(process.cwd() + '/' + file) || data);
     });
 
     return data;
