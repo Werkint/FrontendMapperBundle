@@ -4,6 +4,8 @@ var gulp = require('gulp'),
     _ = require('lodash'),
     fs = require('fs'),
     glob = require('glob'),
+    merge = require('merge-stream'),
+    clean = require('gulp-clean'),
     mainFiles = require('main-bower-files'),
     bower = require('gulp-bower');
 
@@ -35,7 +37,16 @@ module.exports = function (config) {
 
     fs.writeFileSync(process.cwd() + '/bower.json', JSON.stringify(config.data));
 
-    gulp.task('bower', function () {
+    gulp.task('bower-clearbundles', function () {
+        var src = merge.apply(undefined, _.map(config.packages, function (row) {
+            return gulp.src(config.target + '/' + row.name, {read: false});
+        }));
+
+        return src
+            .pipe(clean());
+    });
+
+    gulp.task('bower', ['bower-clearbundles'], function () {
         return bower({
             cmd:       'install',
             directory: config.target,
