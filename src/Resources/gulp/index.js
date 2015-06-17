@@ -6,6 +6,7 @@ require('events').EventEmitter.prototype._maxListeners = 200;
 var gulp = require('gulp'),
     _ = require('lodash'),
     merge = require('merge-stream'),
+    gutil = require('gulp-util'),
     multipipe = require('multipipe'),
     mark = require('gulp-mark'),
     marker = require('./marker'),
@@ -93,8 +94,6 @@ module.exports = function () {
         var list = symfonyMapper(),
             files = _.pluck(list, 'path');
 
-      console.log(list)
-
         return watch(files, function (event) {
             var path = event.path,
                 dest = _.find(list, function (row) {
@@ -109,6 +108,7 @@ module.exports = function () {
 
             dest = process.cwd() + '/' + dest;
 
+            gutil.log(path);
             // TODO: log
             gulp.src(path)
                 .pipe(minify())
