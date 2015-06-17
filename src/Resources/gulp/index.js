@@ -108,11 +108,15 @@ module.exports = function () {
 
             dest = process.cwd() + '/' + dest;
 
-            gutil.log(path);
-            // TODO: log
             gulp.src(path)
                 .pipe(minify())
                 .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
+                .pipe(notify({
+                    message: 'File changed: <%= file.relative %>',
+                    notifier: function (options, callback) {
+                        callback();
+                    },
+                }))
                 .pipe(gulp.dest(dest));
         });
     });
