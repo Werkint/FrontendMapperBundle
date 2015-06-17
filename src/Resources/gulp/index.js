@@ -93,8 +93,6 @@ module.exports = function () {
         var list = symfonyMapper(),
             files = _.pluck(list, 'path');
 
-      console.log(list)
-
         return watch(files, function (event) {
             var path = event.path,
                 dest = _.find(list, function (row) {
@@ -109,10 +107,15 @@ module.exports = function () {
 
             dest = process.cwd() + '/' + dest;
 
-            // TODO: log
             gulp.src(path)
                 .pipe(minify())
                 .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
+                .pipe(notify({
+                    message: 'File changed: <%= file.relative %>',
+                    notifier: function (options, callback) {
+                        callback();
+                    },
+                }))
                 .pipe(gulp.dest(dest));
         });
     });
