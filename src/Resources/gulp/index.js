@@ -93,6 +93,8 @@ module.exports = function () {
         var list = symfonyMapper(),
             files = _.pluck(list, 'path');
 
+      console.log(list)
+
         return watch(files, function (event) {
             var path = event.path,
                 dest = _.find(list, function (row) {
@@ -104,6 +106,8 @@ module.exports = function () {
 
             dest = config.root + '/' + config.path + dest.dest + prefix;
             dest = dest.replace(/\/\//, '/');
+
+            dest = process.cwd() + '/' + dest;
 
             // TODO: log
             gulp.src(path)
