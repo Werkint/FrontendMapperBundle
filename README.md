@@ -11,3 +11,4 @@ requirejs.config({
 });
 ```
 also npm install --save exec-sync
+also npm install --save glob

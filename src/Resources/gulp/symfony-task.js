@@ -2,7 +2,7 @@ module.exports = function (name, args) {
     'use strict';
 
     var execSync = require('spawn-sync'),
-        result   = execSync('app/console', [name + (args ? args.join(' ') : '')]);
+        result   = execSync('php', ['app/console', name + (args ? args.join(' ') : '')]);
     if (result.status !== 0) {
         process.stderr.write(result.stderr);
         process.exit(result.status);
