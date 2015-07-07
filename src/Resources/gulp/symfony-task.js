@@ -1,8 +1,13 @@
 module.exports = function (name, args) {
     'use strict';
 
-    var execSync = require('exec-sync'),
-        data = execSync('app/console ' + name + (args ? args.join(' ') : ''));
+    var execSync = require('spawn-sync'),
+        result   = execSync('app/console', [name + (args ? args.join(' ') : '')]);
+    if (result.status !== 0) {
+        process.stderr.write(result.stderr);
+        process.exit(result.status);
+    }
+    process.stderr.write(result.stderr);
 
-    return JSON.parse(data);
+    return JSON.parse(result.stdout);
 };

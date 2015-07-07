@@ -10,3 +10,4 @@ requirejs.config({
     },
 });
 ```
+also npm install --save exec-sync
