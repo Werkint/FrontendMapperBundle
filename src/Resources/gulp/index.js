@@ -117,16 +117,10 @@ module.exports = function () {
 
             dest = process.cwd() + '/' + dest;
 
-            /** coffee support */
-            pipe(gulpif('*.coffee', coffee({
-                "bare": true
-            }).on('error', gutil.log)));
-
             gulp.src(path)
-                /** coffee support */
                 .pipe(gulpif('*.coffee', coffee({
                     "bare": true
-                }).on('error', gutil.log)))
+                })).on('error', gutil.log))
                 .pipe(minify())
                 .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
                 .pipe(notify({
