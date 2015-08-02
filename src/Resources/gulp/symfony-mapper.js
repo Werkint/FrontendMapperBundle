@@ -5,11 +5,11 @@ var task = require('./symfony-task'),
 
 module.exports = function (exportPath) {
     return function () {
-        var data = task('werkint:frontendmapper:dump')
+        var data = task('werkint:frontendmapper:dump');
 
         return _.map(data, function (row) {
             return {
-                "path":   row.path + '/**/*.js', // TODO: ext change
+                "path":   row.path + '/**/*.+(js|coffee)', // TODO: ext change
                 "dest":   '/js/' + row.name,
                 "prefix": row.path,
             };

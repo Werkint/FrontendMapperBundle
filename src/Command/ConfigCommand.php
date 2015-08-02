@@ -16,7 +16,7 @@ class ConfigCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-        ->setName('werkint:frontendmapper:config');
+            ->setName('werkint:frontendmapper:config');
     }
 
     /**
@@ -37,15 +37,15 @@ class ConfigCommand extends ContainerAwareCommand
         ));
 
         $output->write(json_encode([
-            'root'   => './web',
-            'path'   => './assets',
+            'root' => './web',
+            'path' => './assets',
             'minify' => !$this->getContainer()->getParameter('kernel.debug'),
-            'bower'  => [
-                'mainFile'      => 'bower.json',
+            'bower' => [
+                'mainFile' => 'bower.json',
                 'renamesConfig' => 'overrides.json',
-                'target'        => 'bower_components',
-                'packages'      => $packages,
-                'data'          => $bowerConfig,
+                'target' => 'bower_components',
+                'packages' => $packages,
+                'data' => $bowerConfig,
             ],
 
         ], JSON_PRETTY_PRINT));

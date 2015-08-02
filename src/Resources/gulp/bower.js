@@ -23,7 +23,7 @@ var getOverrides = function (bowerTarget, renamesConfig) {
 
 module.exports = function (config) {
     _.merge(config.data, {
-        dependencies: {},
+        dependencies: {}
     });
 
     _.each(config.packages, function (row) {
@@ -48,7 +48,7 @@ module.exports = function (config) {
 
     gulp.task('bower', ['bower-clearbundles'], function () {
         return bower({
-            cmd:       'install',
+            cmd: 'install',
             directory: config.target,
         }, [
             //'-q', TODO: quietb
@@ -59,8 +59,8 @@ module.exports = function (config) {
         return mainFiles({
             paths: {
                 bowerDirectory: config.target,
-                bowerrc:        '.bowerrc',
-                bowerJson:      './bower.json',
+                bowerrc: '.bowerrc',
+                bowerJson: './bower.json',
             }
         });
     };

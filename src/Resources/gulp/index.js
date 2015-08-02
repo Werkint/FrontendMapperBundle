@@ -19,6 +19,10 @@ var gulp = require('gulp'),
     plumber = require('gulp-plumber'),
     config = require('./symfony-task')('werkint:frontendmapper:config');
 
+var gulpif = require('gulp-if'),
+    coffee = require('gulp-coffee');
+
+
 // Task-helpers
 var symfonyMapper = require('./symfony-mapper')(config.bower.target),
     bower = require('./bower')(config.bower),
@@ -27,7 +31,7 @@ var symfonyMapper = require('./symfony-mapper')(config.bower.target),
 
 // Список источников
 var streams = {
-    bower:   function () {
+    bower: function () {
         var src = gulp.src(bower(), {
             base: config.bower.target,
         });
@@ -47,7 +51,7 @@ var streams = {
         });
 
         return merge.apply(undefined, list);
-    },
+    }
 };
 
 // Меняет dest в зависимости от бандла
@@ -68,6 +72,11 @@ module.exports = function () {
         var src = merge.apply(undefined, _.map(list, function (source, name) {
             return source().pipe(mark.set(name));
         }));
+
+        /** coffee support */
+        src.pipe(gulpif('*.coffee', coffee({
+            "bare": true
+        }).on('error', gutil.log)));
 
         return src
             .pipe(mark.if('bower', multipipe(
