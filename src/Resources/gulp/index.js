@@ -1,7 +1,7 @@
 'use strict';
 
-// TODO: check this DIRTY FILTHY hack
-require('events').EventEmitter.prototype._maxListeners = 200;
+// global process variable. поставь в баш рц или в файле который запускает таск
+require('events').EventEmitter.prototype._maxListeners = process.env.NODE_MAX_LISTENER || 200;
 
 var gulp = require('gulp'),
     _ = require('lodash'),
