@@ -1,17 +1,24 @@
 'use strict';
 
 var task = require('./symfony-task'),
-    _ = require('underscore');
+_ = require('underscore');
 
-module.exports = function (exportPath) {
+module.exports = function (config) {
     return function () {
         var data = task('werkint:frontendmapper:dump');
 
+        var extensions = _.union(
+            ['js'],
+            config.es6.extensions,
+            config.coffee.extensions
+        ).join('|');
+
+
         return _.map(data, function (row) {
             return {
-                "path":   row.path + '/**/*.+(js|coffee)', // TODO: ext change
-                "dest":   '/js/' + row.name,
-                "prefix": row.path,
+                "path": row.path + '/**/*.+(' + extensions + ')',
+                "dest": '/js/' + row.name,
+                "prefix": row.path
             };
         })
     };

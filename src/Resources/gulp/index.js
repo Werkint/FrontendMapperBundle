@@ -4,30 +4,31 @@
 require('events').EventEmitter.prototype._maxListeners = process.env.NODE_MAX_LISTENER || 200;
 
 var gulp = require('gulp'),
-    _ = require('lodash'),
-    merge = require('merge-stream'),
-    gutil = require('gulp-util'),
-    multipipe = require('multipipe'),
-    mark = require('gulp-mark'),
-    marker = require('./marker'),
-    rename = require('./rename2'),
-    watch = require('gulp-watch'),
-    globule = require('globule'),
-    clean = require('gulp-clean'),
-    notify = require("gulp-notify"),
-    gulpIgnore = require('gulp-ignore'),
-    plumber = require('gulp-plumber'),
-    config = require('./symfony-task')('werkint:frontendmapper:config');
+_ = require('lodash'),
+merge = require('merge-stream'),
+gutil = require('gulp-util'),
+multipipe = require('multipipe'),
+mark = require('gulp-mark'),
+marker = require('./marker'),
+rename = require('./rename2'),
+watch = require('gulp-watch'),
+globule = require('globule'),
+clean = require('gulp-clean'),
+notify = require("gulp-notify"),
+gulpIgnore = require('gulp-ignore'),
+plumber = require('gulp-plumber'),
+config = require('./symfony-task')('werkint:frontendmapper:config');
 
 var gulpif = require('gulp-if'),
-    coffee = require('gulp-coffee');
+coffee = require('gulp-coffee');
+var babel = require('gulp-babel');
 
 
 // Task-helpers
-var symfonyMapper = require('./symfony-mapper')(config.bower.target),
-    bower = require('./bower')(config.bower),
-    normalizer = require('./normalizer')(config),
-    minify = require('./minify')(config);
+var symfonyMapper = require('./symfony-mapper')(config),
+bower = require('./bower')(config.bower),
+normalizer = require('./normalizer')(config),
+minify = require('./minify')(config);
 
 // Список источников
 var streams = {
@@ -61,6 +62,7 @@ var bundleRename = function (path, file) {
 };
 
 module.exports = function () {
+
     var getPipe = function (pipeName) {
         var list = streams;
         if (pipeName) {
@@ -73,10 +75,20 @@ module.exports = function () {
             return source().pipe(mark.set(name));
         }));
 
+        /** es6 support */
+        var exts = _.map(config.es6.extensions, function (ext) {
+            return '.' + ext;
+        }), options = _.pick(config.es6, ['modules']);
+        src.pipe(gulpif(function (file) {
+            return _.contains(exts, require('path').extname(file.path));
+        }, babel(options)));
+
         /** coffee support */
-        src.pipe(gulpif('*.coffee', coffee({
-            "bare": true
-        }).on('error', gutil.log)));
+        _.each(config.coffee.extensions, function (ext) {
+            src.pipe(gulpif('*.' + ext, coffee({
+                "bare": true
+            })).on('error', gutil.log));
+        });
 
         return src
             .pipe(mark.if('bower', multipipe(
@@ -101,13 +113,13 @@ module.exports = function () {
 
     gulp.task('watch', function () {
         var list = symfonyMapper(),
-            files = _.pluck(list, 'path');
+        files = _.pluck(list, 'path');
 
         return watch(files, function (event) {
             var path = event.path,
-                dest = _.find(list, function (row) {
-                    return globule.isMatch(row.path, path);
-                });
+            dest = _.find(list, function (row) {
+                return globule.isMatch(row.path, path);
+            });
 
             var prefix = path.substr(dest.prefix.length);
             prefix = prefix.replace(/(\/[^\/]+)$/, '');
@@ -117,11 +129,25 @@ module.exports = function () {
 
             dest = process.cwd() + '/' + dest;
 
-            gulp.src(path)
-                .pipe(gulpif('*.coffee', coffee({
+            var src = gulp.src(path);
+
+            /** es6 support */
+            var exts = _.map(config.es6.extensions, function (ext) {
+                return '.' + ext;
+            }), options = _.pick(config.es6, ['modules']);
+            src.pipe(gulpif(function (file) {
+                return _.contains(exts, require('path').extname(file.path));
+            }, babel(options)));
+
+            /** coffee support */
+            _.each(config.coffee.extensions, function (ext) {
+                src.pipe(gulpif('*.' + ext, coffee({
                     "bare": true
-                })).on('error', gutil.log))
-                .pipe(minify())
+                })).on('error', gutil.log));
+            });
+
+
+            src.pipe(minify())
                 .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
                 .pipe(notify({
                     message: 'File changed: <%= file.relative %>',
@@ -133,3 +159,5 @@ module.exports = function () {
         });
     });
 };
+
+
