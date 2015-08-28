@@ -44,7 +44,7 @@
     "underscore": "^1.8.3",
     "vinyl-sourcemaps-apply": "~0.1.4",
     "walk": "~2.3.9",
-    "gulp-babel": "^5.2.1",
+    "gulp-babel": "^5.2.1"
   },
   "devDependencies": {
   }
