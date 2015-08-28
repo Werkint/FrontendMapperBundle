@@ -40,6 +40,15 @@ class ConfigCommand extends ContainerAwareCommand
             'root' => './web',
             'path' => './assets',
             'minify' => !$this->getContainer()->getParameter('kernel.debug'),
+            'es6' => [
+                // Babel options
+                'modules' => 'amd',
+                'extensions' => ['es6', 'es']
+            ],
+            'coffee' => [
+                // CoffeeScript options
+                'extensions' => ['coffee']
+            ],
             'bower' => [
                 'mainFile' => 'bower.json',
                 'renamesConfig' => 'overrides.json',
