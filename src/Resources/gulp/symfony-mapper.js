@@ -1,7 +1,7 @@
 'use strict';
 
 var task = require('./symfony-task'),
-_ = require('underscore');
+    _ = require('underscore');
 
 module.exports = function (config) {
     return function () {
@@ -16,10 +16,11 @@ module.exports = function (config) {
 
         return _.map(data, function (row) {
             return {
-                "path": row.path + '/**/*.+(' + extensions + ')',
-                "dest": '/js/' + row.name,
-                "prefix": row.path
+                "path":   row.path + '/**/*.+(' + extensions + ')',
+                "dest":   '/js/' + row.name, // TODO: remove '/js' ?
+                "prefix": row.path,
+                "name":   row.name,
             };
-        })
+        });
     };
 };

@@ -23,5 +23,19 @@ define([
                 onLoad(router);
             });
         },
+
+        normalize : function (name, normalize) {
+            // resolve any relative paths
+            return normalize(name);
+        },
+
+        //write method based on RequireJS official text plugin by James Burke
+        //https://github.com/jrburke/requirejs/blob/master/text.js
+        write : function(pluginName, moduleName, write){
+            if(moduleName in buildMap){
+                var content = buildMap[moduleName];
+                write('define("'+ pluginName +'!'+ moduleName +'", function(){ return '+ content +';});\n');
+            }
+        }
     };
 });
