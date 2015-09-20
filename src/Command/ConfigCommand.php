@@ -36,28 +36,44 @@ class ConfigCommand extends ContainerAwareCommand
             $this->getContainer()->getParameter('kernel.root_dir') . '/config/bower.json'
         ));
 
-        $output->write(json_encode([
-            'root' => './web',
-            'path' => './assets',
-            'minify' => !$this->getContainer()->getParameter('kernel.debug'),
-            'es6' => [
+        $config = [
+            'root'      => './web',
+            'path'      => './assets',
+            'minify'    => !$this->getContainer()->getParameter('kernel.debug'),
+            'es6'       => [
                 // Babel options
-                'modules' => 'amd',
-                'extensions' => ['es6', 'es']
+                'modules'    => 'amd',
+                'extensions' => ['es6', 'es'],
             ],
-            'coffee' => [
+            'coffee'    => [
                 // CoffeeScript options
-                'extensions' => ['coffee']
+                'extensions' => ['coffee'],
             ],
-            'bower' => [
-                'mainFile' => 'bower.json',
+            'bower'     => [
+                'mainFile'      => 'bower.json',
                 'renamesConfig' => 'overrides.json',
-                'target' => 'bower_components',
-                'packages' => $packages,
-                'data' => $bowerConfig,
+                'target'        => 'bower_components',
+                'packages'      => $packages,
+                'data'          => $bowerConfig,
             ],
 
-        ], JSON_PRETTY_PRINT));
+            'optimizer' => [
+                'stubModules' => [
+                    'json',
+                    'text',
+                    'routerLoader',
+                    'translatorLoader',
+                    'template',
+                ],
+            ],
+        ];
+
+        $defName = $this->getContainer()->getParameter('kernel.root_dir') . '/config/gulp_overrides.json';
+        if (file_exists($defName)) {
+            $config = array_merge_recursive(json_decode(file_get_contents($defName), true), $config);
+        }
+
+        $output->write(json_encode($config, JSON_PRETTY_PRINT));
     }
 
     /**

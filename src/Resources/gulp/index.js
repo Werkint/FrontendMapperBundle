@@ -212,13 +212,7 @@ module.exports = function () {
             return deps;
         };
 
-        var stubModules = [
-            'json',
-            'text',
-            'routerLoader',
-            'translatorLoader',
-            'template',
-        ];
+        var stubModules = config.optimizer.stubModules;
 
         var buildBundles = function(callback){
             var opts = buildConfig('bundles', stubModules);
