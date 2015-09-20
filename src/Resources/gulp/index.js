@@ -114,7 +114,7 @@ module.exports = function () {
             .pipe(gulp.dest(config.root));
     });
 
-    gulp.task('dump-merged-bundles'/*, ['dump']*/, function () {
+    gulp.task('dump-merged-bundles', ['dump'], function () {
         // TODO: async execution
         var Q = require('q');
         var deferred = Q.defer();
