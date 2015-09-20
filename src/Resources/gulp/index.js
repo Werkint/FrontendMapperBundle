@@ -8,6 +8,7 @@ var gulp = require('gulp'),
     merge = require('merge-stream'),
     gutil = require('gulp-util'),
     multipipe = require('multipipe'),
+    fs = require('fs'),
     change = require('gulp-change'),
     mark = require('gulp-mark'),
     marker = require('./marker'),
@@ -113,7 +114,11 @@ module.exports = function () {
             .pipe(gulp.dest(config.root));
     });
 
-    gulp.task('dump-merged-bundles', ['dump'], function () {
+    gulp.task('dump-merged-bundles'/*, ['dump']*/, function () {
+        // TODO: async execution
+        var Q = require('q');
+        var deferred = Q.defer();
+
         var modules = [],
             bundles = symfonyMapper();
         _.each(bundles, function (bundle) {
@@ -127,48 +132,132 @@ module.exports = function () {
             });
         });
 
-        var rjsBuild = require('./rjs-build');
+        var buildConfig = function (name, stubModules, optsIn) {
+            var m = function (a, b) {
+                if (_.isArray(a)) {
+                    return a.concat(b);
+                }
+            };
 
-        modules = _.difference(modules, rjsBuild.excludeShallow);
-        //console.log(modules, rjsBuild.excludeShallow);
-        //return;
+            var opts = _.cloneDeep(require('./rjs-build'));
+            if (optsIn) {
+                _.merge(opts, optsIn, m);
+            }
 
-        var data = 'requirejs(["' + modules.join('", "') + '"], function(){})';
+            var fileSrc = opts.baseUrl + '/' + name + '.js',
+                fileDest = opts.baseUrl + '/' + name + '-built.js';
 
-        var bundlesFile = [
-            process.cwd(),
-            config.root,
-            config.path,
-            'js/bundles.js',
-        ].join('/');
-        require('fs').writeFileSync(Path.normalize(bundlesFile), data);
+            _.merge(opts, {
+                name: name,
+                out:  fileDest,
 
-        requirejs.optimize(rjsBuild, null, function (err) {
-            console.log(err);
+                excludeShallow: [
+                    name,
+                    opts.__stubPluginName,
+                ],
+
+                __src: fileSrc,
+            }, m);
+
+            if (stubModules) {
+                _.merge(opts, {
+                    excludeShallow: stubModules,
+
+                    paths: _.object(_.map(stubModules, function (module) {
+                        return [module, opts.__stubPluginName];
+                    })),
+                }, m);
+            }
+
+            return opts;
+        };
+        var filterConfig = function (config) {
+            return _.pick(config, function (val, key) {
+                return key.indexOf('__') !== 0;
+            });
+        };
+
+        var writeSrcFile = function (options, modulesIn) {
+            var modules = _.difference(
+                modulesIn,
+                options.excludeShallow
+            );
+
+            var data = 'requirejs(["' + modules.join('", "') + '"], function(){})';
+            var bundlesFile = [
+                process.cwd(),
+                options.__src,
+            ].join('/');
+            fs.writeFileSync(Path.normalize(bundlesFile), data);
+        };
+        var getDeps = function (modules) {
+            var parseRjs = require('./rjs-parser/parse');
+
+            var deps = [];
+            _.each(modules, function (module) {
+                var path = [
+                    process.cwd(),
+                    config.root,
+                    config.path,
+                    'js/' + module + '.js',
+                ].join('/');
+
+                var content = fs.readFileSync(path);
+
+                deps = deps.concat(parseRjs(module, content));
+            });
+
+            deps = _.difference(_.unique(deps), modules);
+
+            return deps;
+        };
+
+        var stubModules = [
+            'json',
+            'text',
+            'routerLoader',
+            'translatorLoader',
+            'template',
+        ];
+
+        var buildBundles = function(callback){
+            var opts = buildConfig('bundles', stubModules);
+            opts.findNestedDependencies = true;
+            writeSrcFile(opts, modules);
+            requirejs.optimize(filterConfig(opts), function(){
+                callback(opts);
+            }, function (err) {
+                console.log(err); // TODO: invoke error
+            });
+        };
+
+        var buildDeps = function(callback){
+            var optsLoaders = buildConfig('bundlesLoaders', [
+                'router',
+            ], {
+                'exclude': getDeps(stubModules),
+            });
+            writeSrcFile(optsLoaders, stubModules);
+            requirejs.optimize(filterConfig(optsLoaders), function(){
+                callback(optsLoaders);
+            }, function (err) {
+                console.log(err); // TODO: invoke error
+            });
+        };
+
+        buildBundles(function(opts){
+            buildDeps(function(optsLoaders){
+                var data = [
+                    fs.readFileSync(process.cwd() + '/' + opts.out),
+                    fs.readFileSync(process.cwd() + '/' + optsLoaders.out),
+                ];
+                fs.writeFileSync(process.cwd() + '/' + opts.out, data.join("\n"));
+
+                deferred.resolve();
+            });
         });
 
-        return;
-
-        return streams.bundles()
-            .pipe(change(function (content, done) {
-                var r = this.file.relative,
-                    moduleName = this.file.resource.name + '/' + r.substr(0, r.lastIndexOf('.'));
-
-                //content = content.replace(/(define\()/, '$1"' + moduleName + '", ');
-
-                //modules = modules.concat(parseRjs(moduleName, content));
-                modules.push(moduleName);
-
-                done(null, content);
-            }))
-            .pipe(concat('bundles.js'))
-            .pipe(gulp.dest(config.root + '/' + config.path + '/js'))
-            .on('finish', function () {
-                modules = _.unique(modules).sort();
-
-                var rjs = 'requirejs(["' + modules.join('", "') + '"], function(){})';
-                console.log(rjs);
-            });
+        return deferred.promise;
     });
 
     gulp.task('default', ['dump', 'dump-merged-bundles'], function () {
