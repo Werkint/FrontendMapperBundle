@@ -60,6 +60,7 @@ class ConfigCommand extends ContainerAwareCommand
             'optimizer' => [
                 'stubModules' => [
                     'json',
+                    'css',
                     'text',
                     'routerLoader',
                     'translatorLoader',
