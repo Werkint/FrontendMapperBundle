@@ -78,20 +78,20 @@ module.exports = function () {
             return source().pipe(mark.set(name));
         }));
 
-        /** es6 support */
-        var exts = _.map(config.es6.extensions, function (ext) {
-            return '.' + ext;
-        }), options = _.pick(config.es6, ['modules']);
-        src.pipe(gulpif(function (file) {
-            return _.contains(exts, Path.extname(file.path));
-        }, babel(options)));
-
-        /** coffee support */
-        _.each(config.coffee.extensions, function (ext) {
-            src.pipe(gulpif('*.' + ext, coffee({
-                "bare": true
-            })).on('error', gutil.log));
-        });
+        ///** es6 support */
+        //var exts = _.map(config.es6.extensions, function (ext) {
+        //    return '.' + ext;
+        //}), options = _.pick(config.es6, ['modules']);
+        //src.pipe(gulpif(function (file) {
+        //    return _.contains(exts, Path.extname(file.path));
+        //}, babel(options)));
+        //
+        ///** coffee support */
+        //_.each(config.coffee.extensions, function (ext) {
+        //    src.pipe(gulpif('*.' + ext, coffee({
+        //        "bare": true
+        //    })).on('error', gutil.log));
+        //});
 
         return src
             .pipe(mark.if('bower', multipipe(
@@ -280,20 +280,20 @@ module.exports = function () {
 
             var src = gulp.src(path);
 
-            /** es6 support */
-            var exts = _.map(config.es6.extensions, function (ext) {
-                return '.' + ext;
-            }), options = _.pick(config.es6, ['modules']);
-            src.pipe(gulpif(function (file) {
-                return _.contains(exts, require('path').extname(file.path));
-            }, babel(options)));
-
-            /** coffee support */
-            _.each(config.coffee.extensions, function (ext) {
-                src.pipe(gulpif('*.' + ext, coffee({
-                    "bare": true
-                })).on('error', gutil.log));
-            });
+            ///** es6 support */
+            //var exts = _.map(config.es6.extensions, function (ext) {
+            //    return '.' + ext;
+            //}), options = _.pick(config.es6, ['modules']);
+            //src.pipe(gulpif(function (file) {
+            //    return _.contains(exts, require('path').extname(file.path));
+            //}, babel(options)));
+            //
+            ///** coffee support */
+            //_.each(config.coffee.extensions, function (ext) {
+            //    src.pipe(gulpif('*.' + ext, coffee({
+            //        "bare": true
+            //    })).on('error', gutil.log));
+            //});
 
 
             src.pipe(minify())
