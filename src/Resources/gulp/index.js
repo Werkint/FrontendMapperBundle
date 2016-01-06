@@ -6,10 +6,10 @@ require('events').EventEmitter.prototype._maxListeners = process.env.NODE_MAX_LI
 var gulp = require('gulp'),
     _ = require('lodash'),
     merge = require('merge-stream'),
-    gutil = require('gulp-util'),
+    //gutil = require('gulp-util'),
     multipipe = require('multipipe'),
     fs = require('fs'),
-    change = require('gulp-change'),
+    //change = require('gulp-change'),
     mark = require('gulp-mark'),
     marker = require('./marker'),
     rename = require('./rename2'),
@@ -20,13 +20,14 @@ var gulp = require('gulp'),
     gulpIgnore = require('gulp-ignore'),
     plumber = require('gulp-plumber'),
     config = require('./symfony-task')('werkint:frontendmapper:config'),
-    concat = require('gulp-concat'),
-    gulpif = require('gulp-if'),
-    coffee = require('gulp-coffee'),
+    //concat = require('gulp-concat'),
+    //gulpif = require('gulp-if'),
+    //coffee = require('gulp-coffee'),
     Path = require('path'),
-    babel = require('gulp-babel'),
-    requirejs = require('requirejs'),
-    parseRjs = require('./rjs-parser/parse');
+    //babel = require('gulp-babel'),
+    requirejs = require('requirejs')//,
+    //parseRjs = require('./rjs-parser/parse')
+    ;
 
 // Task-helpers
 var symfonyMapper = require('./symfony-mapper')(config),
