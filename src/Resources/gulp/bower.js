@@ -22,38 +22,9 @@ var getOverrides = function (bowerTarget, renamesConfig) {
 };
 
 module.exports = function (config) {
-    _.merge(config.data, {
-        dependencies: {}
-    });
+    module.exports.writeBowerFile(config);
 
-    _.each(config.packages, function (row) {
-        config.data.dependencies[row.name] = row.path;
-    });
-
-    _.merge(config.data.overrides, getOverrides(
-        config.target,
-        config.renamesConfig
-    ));
-
-    fs.writeFileSync(process.cwd() + '/bower.json', JSON.stringify(config.data));
-
-    gulp.task('bower-clearbundles', function () {
-        var src = merge.apply(undefined, _.map(config.packages, function (row) {
-            return gulp.src(config.target + '/' + row.name, {read: false});
-        }));
-
-        return src
-            .pipe(clean());
-    });
-
-    gulp.task('bower', ['bower-clearbundles'], function () {
-        return bower({
-            cmd: 'install',
-            directory: config.target,
-        }, [
-            //'-q', TODO: quietb
-        ]);
-    });
+    module.exports.attachGulpTasks(config);
 
     return function () {
         return mainFiles({
@@ -64,4 +35,41 @@ module.exports = function (config) {
             }
         });
     };
+};
+
+module.exports.writeBowerFile = function writeBowerFile(config) {
+    _.merge(config.data, {
+        dependencies: {}
+    });
+
+    _.each(config.packages, function (row) {
+        config.data.dependencies[row.name] = row.path;
+    });
+
+    _.merge(config.data.overrides, getOverrides(
+      config.target,
+      config.renamesConfig
+    ));
+
+    fs.writeFileSync(process.cwd() + '/bower.json', JSON.stringify(config.data));
+};
+
+module.exports.attachGulpTasks = function attachGulpTasks(config) {
+    gulp.task('bower-clearbundles', function () {
+        var src = merge.apply(undefined, _.map(config.packages, function (row) {
+            return gulp.src(config.target + '/' + row.name, {read: false});
+        }));
+
+        return src
+          .pipe(clean());
+    });
+
+    gulp.task('bower', ['bower-clearbundles'], function () {
+        return bower({
+            cmd: 'install',
+            directory: config.target,
+        }, [
+            //'-q', TODO: quietb
+        ]);
+    });
 };
